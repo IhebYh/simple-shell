@@ -1,8 +1,6 @@
 #include "shell.h"
 /**
  * main - entry point
- * @argc : int
- * @argv: char
  * Return: int
  */
 int main(void)

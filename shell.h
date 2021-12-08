@@ -60,7 +60,7 @@ int b_exit(char **cmd);
 
 /**
  * struct bulltin - contain bultin to handle and function to excute
- * @command:pointer to char
+ * @cmd:pointer to char
  * @fun:fun to excute when bultin true
  */
 
