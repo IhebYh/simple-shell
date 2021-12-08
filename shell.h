@@ -28,6 +28,8 @@ int _strlen(char *s);
 char *_strcpy(char *dest, char *src);
 int _isalpha(int c);
 int _atoi(char *s);
+char *_strtok(char *str, const char *delim);
+unsigned int check_match(char c, const char *str);
 
 /* MEMORY MANAGEMENT */
 
