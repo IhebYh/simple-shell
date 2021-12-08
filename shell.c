@@ -13,6 +13,7 @@ int main(void)
 
 	while (INFINITE_LOOP)
 	{
+		if (isatty(STDIN_FILENO))
 		write(STDOUT_FILENO, "$ ", 2);
 		gl = getline(&str, &count, stdin);
 

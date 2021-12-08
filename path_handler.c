@@ -13,7 +13,7 @@ char *path_handler(char **str)
 	path = _getenv("PATH");
 	if (_strlen(path) == 0)
 	return (NULL);
-	path_array = _strtok(path, ":");
+	path_array = _strtok(path, ':');
 	if (!path_array)
 	return (NULL);
 

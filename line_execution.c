@@ -20,10 +20,11 @@ void _execve(char **_argv)
 		_p2 = execve(_argv[0], _argv, environ);
 		if (_p2 == -1)
 		{
-			
+			printf("error");
 			free_array(_argv);
-			exit(1);
+			exit(EXIT_FAILURE);
 		}
+		exit(EXIT_SUCCESS);
 	}
 	else
 	wait(&status);
@@ -38,7 +39,7 @@ void cmd_checker(char *cmd)
 	char **_argv;
 
 	cmd[_strlen(cmd) + 1] = '\0';
-	_argv = _strtok(cmd, " ");
+	_argv = _strtok(cmd, ' ');
 	if (_argv != NULL)
 	{
 		if (builtin_checker(_argv) == 0)
@@ -53,6 +54,7 @@ void cmd_checker(char *cmd)
 		else
 		{
 		/* TODO : PRINT ERROR */
+		printf("Error");
 		free_array(_argv);
 		}
 	}
