@@ -31,16 +31,16 @@ return (-1);
 int builtin_handler(char **cmd)
 {
 bul_t bul[] = {
-{"exit", _exit},
-{"env", _env},
+{"exit", b_exit},
+{"env", NULL},
 {NULL, NULL}
 };
 int i = 0;
 while ((bul + i)->cmd)
 {
-if (_strcmp(cmd[0], (bil + i)->cmd) == 0)
+if (_strcmp(cmd[0], (bul + i)->cmd) == 0)
 {
-return ((bil + i)->fun(cmd));
+return ((bul + i)->fun(cmd));
 }
 i++;
 }

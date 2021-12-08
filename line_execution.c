@@ -12,13 +12,15 @@ void _execve(char **_argv)
 
 	_p1 = fork();
 	if (_p1 == -1)
+	{
 	/* print error */
+	}
 	if (_p1 == 0)
 	{
-		_p2 == execve(_argv[0], _argv, environ);
+		_p2 = execve(_argv[0], _argv, environ);
 		if (_p2 == -1)
 		{
-			/* print error */
+			
 			free_array(_argv);
 			exit(1);
 		}

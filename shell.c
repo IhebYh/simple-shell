@@ -5,7 +5,7 @@
  * @argv: char
  * Return: int
  */
-int main(__attribute__((unused)) int argc, char **argv)
+int main(void)
 {
 	char *str = NULL;
 	size_t count = 0;

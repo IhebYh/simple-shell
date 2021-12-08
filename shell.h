@@ -53,9 +53,9 @@ char *_getenv(const char *name);
 
 /* BUILT IN FUNCTIONS */
 
-int builtin_handler(char **cmd, int status);
+int builtin_handler(char **cmd);
 int builtin_checker(char **cmd);
-void _exit(char **cmd, char *input, char **argv, int c);
+int b_exit(char **cmd);
 
 /* BUILT IN STRUCT */
 
@@ -68,7 +68,7 @@ void _exit(char **cmd, char *input, char **argv, int c);
 typedef struct  bulltin
 {
 	char *cmd;
-	int (*fun)(char **line, int er);
+	int (*fun)(char **line);
 } bul_t;
 
 #endif
