@@ -1,66 +1,47 @@
 #include "shell.h"
-/**
- * check_match - checks if a character matches any in a string
- * @c: character to check
- * @str: string to check
- *
- * Return: 1 if match, 0 if not
- */
-unsigned int check_match(char c, const char *str)
-{
-	unsigned int i;
-
-	for (i = 0; str[i] != '\0'; i++)
-	{
-		if (c == str[i])
-			return (1);
-	}
-	return (0);
-}
 
 /**
- * _strtok - own strtok
- * @str: string to tokenize
- * @delim: delimiter to tokenize against
+ * _strtok - split a string into tokens by delimeter
  *
- * Return: pointer to the next token or NULL
- */
-char *_strtok(char *str, const char *delim)
+ * @str: string
+ * @del: delimeter
+ *
+ * Return: array of strings of tokens
+ **/
+char **_strtok(const char *str, const char del)
 {
-	static char *token_start;
-	static char *next_token;
-	unsigned int i;
+	char **s = NULL;
+	int i = 0, j, w = 0;
 
-	if (str != NULL)
-		next_token = str;
-	token_start = next_token;
-	if (token_start == NULL)
+	while (str[i] != '\0' && str[i] == del)
+		i++;
+	if (!str[i])
 		return (NULL);
-	for (i = 0; next_token[i] != '\0'; i++)
+	i = 0;
+	while (str[i])
 	{
-		if (check_match(next_token[i], delim) == 0)
-			break;
+		j = i;
+		if (str[i] != del)
+		{
+			s = _realloc(s, sizeof(char *) * w,
+						sizeof(char *) * (w + 1));
+			s[w] = NULL;
+			while (str[j] && str[j] != del)
+			{
+				s[w] = _realloc(s[w], (j - i), ((j - i) + 1));
+				s[w][j - i] = str[j];
+				j++;
+			}
+			s[w] = _realloc(s[w], (j - i), ((j - i) + 1));
+			s[w][j - i] = '\0';
+			i += (j - i);
+			w++;
+		}
+		else
+			i++;
 	}
-	if (next_token[i] == '\0' || next_token[i] == '#')
-	{
-		next_token = NULL;
-		return (NULL);
-	}
-	token_start = next_token + i;
-	next_token = token_start;
-	for (i = 0; next_token[i] != '\0'; i++)
-	{
-		if (check_match(next_token[i], delim) == 1)
-			break;
-	}
-	if (next_token[i] == '\0')
-		next_token = NULL;
-	else
-	{
-		next_token[i] = '\0';
-		next_token = next_token + i + 1;
-		if (*next_token == '\0')
-			next_token = NULL;
-	}
-	return (token_start);
+	s = _realloc(s, sizeof(char *) * w, sizeof(char *) * (w + 1));
+	s[w] = NULL;
+
+	return (s);
 }
