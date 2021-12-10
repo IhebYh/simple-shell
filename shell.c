@@ -6,15 +6,14 @@
  * Return: Exit Value By Status
  */
 
-int main(__attribute__((unused)) int argc, char **argv)
+int main(void)
 {
 	char *input, **cmd;
-	int counter = 0, statue = 1, st = 0;
+	int statue = 1, st = 0;
 
 	signal(SIGINT, signal_to_handel);
 	while (statue)
 	{
-		counter++;
 		if (isatty(STDIN_FILENO))
 			write(STDOUT_FILENO, "$ ", 2);
 		input = _getline();
@@ -33,8 +32,10 @@ int main(__attribute__((unused)) int argc, char **argv)
 			free_all(cmd, input);
 			continue;
 		}
-		else
+		else if (_strcmp(cmd[0], "\n") == 0)
 		{
+			if (st != 0)
+			st = 0;
 			st = cmd_checker(cmd);
 
 		}
