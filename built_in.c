@@ -19,6 +19,7 @@ int b_exit(char **cmd)
 		if (_isalpha(cmd[1][i++]) != 0)
 		{
 			/* print error */
+			free(cmd);
 			break;
 		}
 		else
@@ -29,4 +30,26 @@ int b_exit(char **cmd)
 		}
 	}
 	return (0);
+}
+/**
+* b_env - print env
+* @_argv: char**
+* Return:int
+**/
+int b_env(char **_argv __attribute__((unused)))
+{
+	int i = 0;
+
+	while (environ[i])
+	{
+		if (write(STDOUT_FILENO, environ[i], _strlen(environ[i])) == -1)
+		{
+			perror("env");
+			return (-1);
+		}
+		write(STDOUT_FILENO, "\n", 1);
+
+		i++;
+	}
+	return (1);
 }

@@ -1,58 +1,57 @@
 #include "shell.h"
+
 /**
-* path_handler - handling the path
-* @str:string
-* Return: char
-*/
-char *path_handler(char **str)
+ * path_cmd -  Search In $PATH For Excutable Command
+ * @cmd: Parsed Input
+ * Return: 1  Failure  0  Success.
+ */
+int path_cmd(char **cmd)
 {
-	int i = 0;
-	char **path_array, *p, *path;
-	struct stat st;
+	char *path, *value, *cmd_path;
+	struct stat buf;
 
 	path = _getenv("PATH");
-	if (_strlen(path) == 0)
-	return (NULL);
-	path_array = _strtok(path, ':');
-	if (!path_array)
-	return (NULL);
-
-	while (path_array[i] != NULL)
+	value = _strtok(path, ":");
+	while (value != NULL)
 	{
-		p = path_maker(path_array[i], *str);
-		if (stat(p, &st) == 0)
+		cmd_path = build(*cmd, value);
+		if (stat(cmd_path, &buf) == 0)
 		{
-			free(*str);
-			*str = p;
-			free_array(path_array);
-			return (p);
+			*cmd = _strdup(cmd_path);
+			free(cmd_path);
+			return (0);
 		}
-		free(p);
-		i++;
+		free(cmd_path);
+		value = _strtok(NULL, ":");
 	}
-	free_array(path_array);
-	return (NULL);
+	free(path);
+
+	return (1);
 }
 /**
-* path_maker - Making a path from the value gotten from the getenv function
-* @p:char*
-* @f:char*
-* Return:char
-*/
-char *path_maker(char *p, char *f)
+ * build - Build Command
+ * @token: Excutable Command
+ * @value: Dirctory Conatining Command
+ *
+ * Return: Parsed Full Path Of Command Or NULL Case Failed
+ */
+char *build(char *token, char *value)
 {
-	char *str;
+	char *cmd;
+	size_t len;
 
-	if (p == NULL || f == NULL)
-	return (NULL);
+	len = _strlen(value) + _strlen(token) + 2;
+	cmd = malloc(sizeof(char) * len);
+	if (cmd == NULL)
+	{
+		return (NULL);
+	}
 
-	str = malloc(_strlen(p) + _strlen(f) + 2);
-	if (str == NULL)
-	return (NULL);
-	_strcpy(str, p);
-	str[_strlen(p)] = '/';
-	str[_strlen(p) + 1] = '\0';
-	_strcat(str, f);
-	str[_strlen(p) + _strlen(f) + 2] = '\0';
-	return (str);
+	memset(cmd, 0, len);
+
+	cmd = _strcat(cmd, value);
+	cmd = _strcat(cmd, "/");
+	cmd = _strcat(cmd, token);
+
+	return (cmd);
 }

@@ -1,35 +1,44 @@
 #include "shell.h"
 /**
- * main - entry point
- * Return: int
+ * main - Simple Shell (Hsh)
+ * @argc: Argument Count
+ * @argv:Argument Value
+ * Return: Exit Value By Status
  */
-int main(void)
+
+int main(__attribute__((unused)) int argc, char **argv)
 {
-	char *str = NULL;
-	size_t count = 0;
-	ssize_t gl = 0;
+	char *input, **cmd;
+	int counter = 0, statue = 1, st = 0;
 
-	while (INFINITE_LOOP)
+	signal(SIGINT, signal_to_handel);
+	while (statue)
 	{
+		counter++;
 		if (isatty(STDIN_FILENO))
-		write(STDOUT_FILENO, "$ ", 2);
-		gl = getline(&str, &count, stdin);
-
-		if (gl == EOF)
+			write(STDOUT_FILENO, "$ ", 2);
+		input = _getline();
+		if (input[0] == '\0')
 		{
-			free(str);
-			exit(0);
+			continue;
 		}
-		if (_strcmp(str, "\n"))
+		cmd = parse_cmd(input);
+		if (_strcmp(cmd[0], "exit") == 0)
 		{
-			cmd_checker(str);
-			str = NULL;
+			b_exit(cmd);
+		}
+		else if (builtin_checker(cmd) == 0)
+		{
+			st = builtin_handler(cmd);
+			free_all(cmd, input);
+			continue;
 		}
 		else
 		{
-			free(str);
-			str = NULL;
+			st = cmd_checker(cmd);
+
 		}
+		free_all(cmd, input);
 	}
-		return (0);
+	return (statue);
 }

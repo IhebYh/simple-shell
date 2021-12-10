@@ -1,61 +1,41 @@
 #include "shell.h"
-
-/**
-* _execve - execute a line of commands
-* @_argv: line of commands
-* Return: void
-*/
-void _execve(char **_argv)
-{
-	pid_t _p1, _p2;
-	int status;
-
-	_p1 = fork();
-	if (_p1 == -1)
-	{
-	/* print error */
-	}
-	if (_p1 == 0)
-	{
-		_p2 = execve(_argv[0], _argv, environ);
-		if (_p2 == -1)
-		{
-			printf("error");
-			free_array(_argv);
-			exit(EXIT_FAILURE);
-		}
-		exit(EXIT_SUCCESS);
-	}
-	else
-	wait(&status);
-}
 /**
 * cmd_checker - check the line of command given by the user
 * @cmd: char
-* Return: void
+* Return: int
 */
-void cmd_checker(char *cmd)
+int cmd_checker(char **cmd)
 {
-	char **_argv;
+	int status;
+	pid_t pid;
 
-	cmd[_strlen(cmd) + 1] = '\0';
-	_argv = _strtok(cmd, ' ');
-	if (_argv != NULL)
+	if (*cmd == NULL)
 	{
-		if (builtin_checker(_argv) == 0)
-		{
-			builtin_handler(_argv);
-		}
-		else if (path_handler(&_argv[0]))
-		{
-			_execve(_argv);
-			free_array(_argv);
-		}
-		else
-		{
-		/* TODO : PRINT ERROR */
-		printf("Error");
-		free_array(_argv);
-		}
+		return (-1);
 	}
+
+	pid = fork();
+	if (pid == -1)
+	{
+		perror("Error");
+		return (-1);
+	}
+
+	if (pid == 0)
+	{
+		if (_strncmp(*cmd, "./", 2) != 0 && _strncmp(*cmd, "/", 1) != 0)
+		{
+			path_cmd(cmd);
+		}
+
+		if (execve(*cmd, cmd, environ) == -1)
+		{
+			perror("Not found");
+			free(cmd);
+			exit(EXIT_FAILURE);
+		}
+		return (EXIT_SUCCESS);
+	}
+	wait(&status);
+	return (0);
 }
